@@ -33,9 +33,11 @@ export const createPost = async (req, res) => {
 
 		await newPost.save();
 
-		const post = await Post.find();
+		const friends = user.friends.map((friend) => friend);
+		friends.push(userId);
+		const friendsPosts = await Post.find({ userId: { $in: friends } });
 
-		res.status(201).send(post);
+		res.status(201).send(friendsPosts);
 	} catch (error) {
 		res.status(409).send({ error: error.message });
 	}
